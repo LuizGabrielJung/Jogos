@@ -33,9 +33,11 @@
 <script type="text/javascript">
 
 	//Var global
-    let jogador
+    let jogador, fase, fases
 	tamanhoParede = 100
-
+	$.getJSON('fases.json', function(data) {fases =  data});
+	fase = 1
+	console.log(fases)
 	function setup() {
 		createCanvas($(document).width(), $(document).height());
 		world.gravity.y = 0;
@@ -67,20 +69,8 @@
 		portal.collider = 'static';
 		portal.radius = tamanhoParede/100*20
 
-		new Tiles(
-			['===========',
-			 '=.........=',
-			 '=.=.=====.=',
-			 '=.=.......=',
-			 '=.==.====.=',
-			 '=.=.......=',
-			 '=.=.=====.=',
-			 '=.=...=.=.=',
-			 '=.=====...=',
-			 '=.=.....=.=',
-			 '=.=.=======',
-			 '=.=....-.*=',
-			 '==========='],
+		faseAtual = new Tiles(
+			fases["Fase" + fase],
 			-tamanhoParede,
 			-tamanhoParede,
 			tamanhoParede,
@@ -91,10 +81,25 @@
 	}
 
 	function draw() {
+		clear()
 		background(200);
-		camera.zoom = 4;
+		camera.zoom = 2;
 		camera.x = jogador.x;
 		camera.y = jogador.y;
+
+		if (jogador.colliding(portal)){
+			fase += 1
+			faseAtual.remove()
+			faseAtual = new Tiles(
+				fases["Fase" + fase],
+				-tamanhoParede,
+				-tamanhoParede,
+				tamanhoParede,
+				tamanhoParede
+			)
+			jogador.x = 0
+			jogador.y = 0
+		}
 
 		if (jogador.colliding(walls)){
 			jogador.x = 0
