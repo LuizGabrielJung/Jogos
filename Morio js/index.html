@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Jquery/P5.js -->
+	<script src="https://cdn.jsdelivr.net/npm/p5@1/lib/p5.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/p5@1/lib/addons/p5.sound.min.js"></script>
+			
+	<script src="https://p5play.org/v3/planck.min.js"></script>
+	<script src="https://p5play.org/v3/p5play.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<title></title>
+
+	<style type="text/css">
+		html{
+			overflow: hidden;
+		}
+
+	</style>
+
+</head>
+<body>
+
+</body>
+
+<script type="text/javascript">
+
+	//Var global
+    let jogador
+	tamanhoParede = 100
+
+	function setup() {
+		createCanvas($(document).width(), $(document).height());
+		world.gravity.y = 0;
+
+		jogador = new Sprite(0, 0, 15, 15)
+		jogador.bounciness = 0
+		jogador.color = "#00a335"
+		//jogador.img = 'img/jogador.gif'
+
+		fakewalls = new Group();
+		fakewalls.w = tamanhoParede;
+		fakewalls.h = tamanhoParede;
+		fakewalls.tile = "-";
+		fakewalls.color = "rgba(90, 90, 90, 1)"
+		fakewalls.stroke = "rgba(90, 90, 90, 1)"
+		fakewalls.collider = 'none';
+
+		walls = new Group();
+		walls.w = tamanhoParede;
+		walls.h = tamanhoParede;
+		walls.tile = "=";
+		walls.color = "rgba(90, 90, 90, 1)"
+		walls.bounciness = 0
+		walls.collider = 'static';
+		walls.stroke = "rgba(90, 90, 90, 1)"
+
+		portal = new Group();
+		portal.tile = "*";
+		portal.collider = 'static';
+		portal.radius = tamanhoParede/100*20
+
+		new Tiles(
+			['===========',
+			 '=.........=',
+			 '=.=.=====.=',
+			 '=.=.......=',
+			 '=.==.====.=',
+			 '=.=.......=',
+			 '=.=.=====.=',
+			 '=.=...=.=.=',
+			 '=.=====...=',
+			 '=.=.....=.=',
+			 '=.=.=======',
+			 '=.=....-.*=',
+			 '==========='],
+			-tamanhoParede,
+			-tamanhoParede,
+			tamanhoParede,
+			tamanhoParede
+		);
+
+		
+	}
+
+	function draw() {
+		background(200);
+		camera.zoom = 4;
+		camera.x = jogador.x;
+		camera.y = jogador.y;
+
+		if (jogador.colliding(walls)){
+			jogador.x = 0
+			jogador.y = 0
+		}
+
+		if (jogador.overlapping(fakewalls)){
+			fakewalls.color = "rgba(180, 180, 180, 0.6)"
+		} else{
+			fakewalls.color = "rgba(90, 90, 90, 1)"
+		}
+		x = 0;
+		y = 0;
+        if (kb.pressing('a')){
+			x -= 3;
+		}
+		if (kb.pressing('d')){
+			x += 3;
+		}
+		if (kb.pressing('w')){
+			y -= 3;
+		}
+		if (kb.pressing('s')){
+			y += 3;
+		}
+
+		
+		jogador.y += y
+		jogador.x += x
+	}
+
+</script>
+</html>
