@@ -33,11 +33,17 @@
 <script type="text/javascript">
 
 	//Var global
-    let jogador, fase, fases
+    let jogador, fase, fases, velocidadeJogador
 	tamanhoParede = 100
 	$.getJSON('fases.json', function(data) {fases =  data});
 	fase = 1
-	console.log(fases)
+
+	velocidadeJogador = 3
+
+	function fade(jogador, fakewall){
+		fakewall.color = "rgba(180, 180, 180, 0.6)"
+	}
+
 	function setup() {
 		createCanvas($(document).width(), $(document).height());
 		world.gravity.y = 0;
@@ -81,7 +87,6 @@
 	}
 
 	function draw() {
-		clear()
 		background(200);
 		camera.zoom = 2;
 		camera.x = jogador.x;
@@ -106,24 +111,28 @@
 			jogador.y = 0
 		}
 
-		if (jogador.overlapping(fakewalls)){
-			fakewalls.color = "rgba(180, 180, 180, 0.6)"
-		} else{
+		//fakewalls.color = "rgba(90, 90, 90, 1)"
+		if (!jogador.overlapping(fakewalls, fade)) {
 			fakewalls.color = "rgba(90, 90, 90, 1)"
 		}
+
 		x = 0;
 		y = 0;
-        if (kb.pressing('a')){
-			x -= 3;
+        if (kb.pressing('a') || kb.pressing('left')){
+			x -= velocidadeJogador;
 		}
-		if (kb.pressing('d')){
-			x += 3;
+		if (kb.pressing('d') || kb.pressing('right')){
+			x += velocidadeJogador;
 		}
-		if (kb.pressing('w')){
-			y -= 3;
+		if (kb.pressing('w') || kb.pressing('up')){
+			y -= velocidadeJogador;
 		}
-		if (kb.pressing('s')){
-			y += 3;
+		if (kb.pressing('s') || kb.pressing('down')){
+			y += velocidadeJogador;
+		}
+		if (kb.pressing('shift')){
+			y = y*1.5
+			x = x*1.5
 		}
 
 		
