@@ -33,7 +33,7 @@
 <script type="text/javascript">
 
     let jogador
-	let fase = 8
+	let fase = 11
 	let fases
 	let velocidadeJogador
 	let tamanhoParede
@@ -58,8 +58,12 @@
 		zoom = fases["Fase" + fase]["zoom"]
 		tamanhoParede = fases["Fase" + fase]["tamanhoParede"]
 
-		jogador = new Sprite(0, 0, 15, 15)
+		jogador = new Group();
+		jogador.w = 15;
+		jogador.h = 15;
 		jogador.bounciness = 0
+		jogador.collider = "dynamic"
+		jogador.stroke = "black"
 		jogador.color = "#00a335"
 
 		fakewalls = new Group();
@@ -105,6 +109,7 @@
 		diagonalEnemy.collider = "none"
 		diagonalEnemy.stroke = "black"
 
+		jogador.tile = "P";
 		fakewalls.tile = "§";
 		walls.tile = "=";
 		portal.tile = "*";
@@ -129,16 +134,19 @@
 		}
 
 		for (let i in fases["Fase" + fase]["inimigosD"]){
+			diagonalEnemy[i].velocity.y = fases["Fase" + fase]["inimigosD"][i];
 			diagonalEnemy[i].velocity.x = fases["Fase" + fase]["inimigosD"][i];
 		}
 		
 	}
 
 	function draw() {
+		clear()
 		background(200);
+		jogador[0].rotateTo(0, 100)
 		camera.zoom = zoom;
-		camera.x = jogador.x;
-		camera.y = jogador.y;
+		camera.x = jogador[0].x;
+		camera.y = jogador[0].y;
 		
 		verticalEnemy.overlaps(walls, virar)
 		verticalEnemy.overlaps(fakewalls, virar)
@@ -158,6 +166,11 @@
 			velocidadeJogador = fases["Fase" + fase]["velocidade"]
 			zoom = fases["Fase" + fase]["zoom"]
 			tamanhoParede = fases["Fase" + fase]["tamanhoParede"]
+			walls.h = tamanhoParede
+			walls.w = tamanhoParede
+			fakewalls.h = tamanhoParede
+			fakewalls.w = tamanhoParede
+			portal.radius = tamanhoParede/100*20
 			faseAtual = new Tiles(
 				fases["Fase" + fase]["tiles"],
 				-tamanhoParede,
@@ -165,16 +178,21 @@
 				tamanhoParede,
 				tamanhoParede
 			)
+			for (let i in fases["Fase" + fase]["inimigosV"]){
+				verticalEnemy[i].velocity.y = fases["Fase" + fase]["inimigosV"][i];
+			}
+			for (let i in fases["Fase" + fase]["inimigosH"]){
+				horizontalEnemy[i].velocity.x = fases["Fase" + fase]["inimigosH"][i];
+			}
+			for (let i in fases["Fase" + fase]["inimigosD"]){
+				diagonalEnemy[i].velocity.y = fases["Fase" + fase]["inimigosD"][i];
+				diagonalEnemy[i].velocity.x = fases["Fase" + fase]["inimigosD"][i];
+			}
 			jogador.x = 0
 			jogador.y = 0
 		}
 
-		if (jogador.colliding(walls) || jogador.overlapping(verticalEnemy)){
-			jogador.x = 0
-			jogador.y = 0
-		}
-
-		if (jogador.colliding(walls) || jogador.overlapping(horizontalEnemy)){
+		if (jogador.colliding(walls) || jogador.overlapping(verticalEnemy) || jogador.overlapping(horizontalEnemy) || jogador.overlapping(diagonalEnemy)){
 			jogador.x = 0
 			jogador.y = 0
 		}
@@ -201,8 +219,8 @@
 		}
 
 		
-		jogador.y += y
-		jogador.x += x
+		jogador.velocity.y = y
+		jogador.velocity.x = x
 	}
 
 </script>
