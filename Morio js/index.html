@@ -32,13 +32,20 @@
 
 <script type="text/javascript">
 
+<<<<<<< Updated upstream
 	//Var global 
     let jogador, fase, fases, velocidadeJogador
 	tamanhoParede = 100
+=======
+    let jogador
+	let fase = 1
+	let fases
+	let velocidadeJogador
+	let tamanhoParede
+	let zoom
+>>>>>>> Stashed changes
 	$.getJSON('fases.json', function(data) {fases =  data});
-	fase = 1
-
-	velocidadeJogador = 3
+	
 
 	function fade(jogador, fakewall){
 		fakewall.color = "rgba(180, 180, 180, 0.6)"
@@ -48,17 +55,20 @@
 		createCanvas($(document).width(), $(document).height());
 		world.gravity.y = 0;
 
+		velocidadeJogador = fases["Fase" + fase]["velocidade"]
+		zoom = fases["Fase" + fase]["zoom"]
+		tamanhoParede = fases["Fase" + fase]["tamanhoParede"]
+
 		jogador = new Sprite(0, 0, 15, 15)
 		jogador.bounciness = 0
 		jogador.color = "#00a335"
-		//jogador.img = 'img/jogador.gif'
 
 		fakewalls = new Group();
 		fakewalls.w = tamanhoParede;
 		fakewalls.h = tamanhoParede;
 		fakewalls.tile = "-";
-		fakewalls.color = "rgba(90, 90, 90, 1)"
-		fakewalls.stroke = "rgba(90, 90, 90, 1)"
+		fakewalls.color = "rgba(92, 92, 92, 1)"
+		fakewalls.stroke = "rgba(92, 92, 92, 1)"
 		fakewalls.collider = 'none';
 
 		walls = new Group();
@@ -76,7 +86,7 @@
 		portal.radius = tamanhoParede/100*20
 
 		faseAtual = new Tiles(
-			fases["Fase" + fase],
+			fases["Fase" + fase]["tiles"],
 			-tamanhoParede,
 			-tamanhoParede,
 			tamanhoParede,
@@ -88,15 +98,18 @@
 
 	function draw() {
 		background(200);
-		camera.zoom = 2;
+		camera.zoom = zoom;
 		camera.x = jogador.x;
 		camera.y = jogador.y;
 
 		if (jogador.colliding(portal)){
 			fase += 1
 			faseAtual.remove()
+			velocidadeJogador = fases["Fase" + fase]["velocidade"]
+			zoom = fases["Fase" + fase]["zoom"]
+			tamanhoParede = fases["Fase" + fase]["tamanhoParede"]
 			faseAtual = new Tiles(
-				fases["Fase" + fase],
+				fases["Fase" + fase]["tiles"],
 				-tamanhoParede,
 				-tamanhoParede,
 				tamanhoParede,
@@ -111,10 +124,7 @@
 			jogador.y = 0
 		}
 
-		//fakewalls.color = "rgba(90, 90, 90, 1)"
-		if (!jogador.overlapping(fakewalls, fade)) {
-			fakewalls.color = "rgba(90, 90, 90, 1)"
-		}
+		jogador.overlapping(fakewalls, fade)
 
 		x = 0;
 		y = 0;
