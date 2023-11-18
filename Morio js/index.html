@@ -33,16 +33,20 @@
 <script type="text/javascript">
 
     let jogador
-	let fase = 1
+	let fase = 7
 	let fases
 	let velocidadeJogador
 	let tamanhoParede
 	let zoom
 	$.getJSON('fases.json', function(data) {fases =  data});
-	
 
 	function fade(jogador, fakewall){
 		fakewall.color = "rgba(180, 180, 180, 0.6)"
+	}
+
+	function virar(enemy, walls){
+		enemy.velocity.x = enemy.velocity.x * -1
+		enemy.velocity.y = enemy.velocity.y * -1
 	}
 
 	function setup() {
@@ -60,7 +64,6 @@
 		fakewalls = new Group();
 		fakewalls.w = tamanhoParede;
 		fakewalls.h = tamanhoParede;
-		fakewalls.tile = "-";
 		fakewalls.color = "rgba(92, 92, 92, 1)"
 		fakewalls.stroke = "rgba(92, 92, 92, 1)"
 		fakewalls.collider = 'none';
@@ -68,16 +71,27 @@
 		walls = new Group();
 		walls.w = tamanhoParede;
 		walls.h = tamanhoParede;
-		walls.tile = "=";
 		walls.color = "rgba(90, 90, 90, 1)"
 		walls.bounciness = 0
 		walls.collider = 'static';
 		walls.stroke = "rgba(90, 90, 90, 1)"
 
 		portal = new Group();
-		portal.tile = "*";
 		portal.collider = 'static';
 		portal.radius = tamanhoParede/100*20
+
+		verticalEnemy = new Group()
+		verticalEnemy.w = 15;
+		verticalEnemy.h = 15;
+		verticalEnemy.bounciness = 0
+		verticalEnemy.color = "red"
+		verticalEnemy.collider = "none"
+		verticalEnemy.stroke = "black"
+
+		fakewalls.tile = "§";
+		walls.tile = "=";
+		portal.tile = "*";
+		verticalEnemy.tile = "|";
 
 		faseAtual = new Tiles(
 			fases["Fase" + fase]["tiles"],
@@ -87,6 +101,9 @@
 			tamanhoParede
 		);
 
+		for (let i in fases["Fase" + fase]["inimigosV"]){
+			verticalEnemy[i].velocity.y = fases["Fase" + fase]["inimigosV"][i];
+		}
 		
 	}
 
@@ -95,6 +112,10 @@
 		camera.zoom = zoom;
 		camera.x = jogador.x;
 		camera.y = jogador.y;
+		
+		verticalEnemy.overlaps(walls, virar)
+		verticalEnemy.overlaps(fakewalls, virar)
+		verticalEnemy.overlaps(portal, virar)
 
 		if (jogador.colliding(portal)){
 			fase += 1
@@ -113,7 +134,7 @@
 			jogador.y = 0
 		}
 
-		if (jogador.colliding(walls)){
+		if (jogador.colliding(walls) || jogador.overlapping(verticalEnemy)){
 			jogador.x = 0
 			jogador.y = 0
 		}
