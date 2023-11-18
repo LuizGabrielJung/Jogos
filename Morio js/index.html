@@ -33,13 +33,14 @@
 <script type="text/javascript">
 
     let jogador
-	let fase = 7
+	let fase = 8
 	let fases
 	let velocidadeJogador
 	let tamanhoParede
 	let zoom
 	$.getJSON('fases.json', function(data) {fases =  data});
 
+	
 	function fade(jogador, fakewall){
 		fakewall.color = "rgba(180, 180, 180, 0.6)"
 	}
@@ -88,10 +89,28 @@
 		verticalEnemy.collider = "none"
 		verticalEnemy.stroke = "black"
 
+		horizontalEnemy = new Group()
+		horizontalEnemy.w = 15;
+		horizontalEnemy.h = 15;
+		horizontalEnemy.bounciness = 0
+		horizontalEnemy.color = "red"
+		horizontalEnemy.collider = "none"
+		horizontalEnemy.stroke = "black"
+
+		diagonalEnemy = new Group()
+		diagonalEnemy.w = 15;
+		diagonalEnemy.h = 15;
+		diagonalEnemy.bounciness = 0
+		diagonalEnemy.color = "red"
+		diagonalEnemy.collider = "none"
+		diagonalEnemy.stroke = "black"
+
 		fakewalls.tile = "§";
 		walls.tile = "=";
 		portal.tile = "*";
 		verticalEnemy.tile = "|";
+		horizontalEnemy.tile = "-";
+		diagonalEnemy.tile = "/";
 
 		faseAtual = new Tiles(
 			fases["Fase" + fase]["tiles"],
@@ -103,6 +122,14 @@
 
 		for (let i in fases["Fase" + fase]["inimigosV"]){
 			verticalEnemy[i].velocity.y = fases["Fase" + fase]["inimigosV"][i];
+		}
+
+		for (let i in fases["Fase" + fase]["inimigosH"]){
+			horizontalEnemy[i].velocity.x = fases["Fase" + fase]["inimigosH"][i];
+		}
+
+		for (let i in fases["Fase" + fase]["inimigosD"]){
+			diagonalEnemy[i].velocity.x = fases["Fase" + fase]["inimigosD"][i];
 		}
 		
 	}
@@ -116,6 +143,14 @@
 		verticalEnemy.overlaps(walls, virar)
 		verticalEnemy.overlaps(fakewalls, virar)
 		verticalEnemy.overlaps(portal, virar)
+
+		horizontalEnemy.overlaps(walls, virar)
+		horizontalEnemy.overlaps(fakewalls, virar)
+		horizontalEnemy.overlaps(portal, virar)
+
+		diagonalEnemy.overlaps(walls, virar)
+		diagonalEnemy.overlaps(fakewalls, virar)
+		diagonalEnemy.overlaps(portal, virar)
 
 		if (jogador.colliding(portal)){
 			fase += 1
@@ -135,6 +170,11 @@
 		}
 
 		if (jogador.colliding(walls) || jogador.overlapping(verticalEnemy)){
+			jogador.x = 0
+			jogador.y = 0
+		}
+
+		if (jogador.colliding(walls) || jogador.overlapping(horizontalEnemy)){
 			jogador.x = 0
 			jogador.y = 0
 		}
