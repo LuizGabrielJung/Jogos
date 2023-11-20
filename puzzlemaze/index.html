@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Jquery/P5.js -->
+	<script src="https://cdn.jsdelivr.net/npm/p5@1/lib/p5.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/p5@1/lib/addons/p5.sound.min.js"></script>
+			
+	<script src="https://p5play.org/v3/planck.min.js"></script>
+	<script src="https://p5play.org/v3/p5play.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<title></title>
+
+	<style type="text/css">
+		html{
+			overflow: hidden;
+		}
+
+	</style>
+
+</head>
+<body>
+
+</body>
+
+<script type="text/javascript">
+
+    let player
+	let level = 11
+	let maps
+	let velocidadeJogador = 3
+	let tamanhoParede
+	let zoom
+	let respawn
+	let running = false
+	let status = "Game"
+	$.getJSON('maps.json', function(data) {maps =  data});
+	
+	function fade(player, fakewall){
+		fakewall.color = "rgba(0, 0, 0, 0.5)"
+		fakewall.stroke = "rgba(0, 0, 0, 0)"
+	}
+
+	function check(player, point){
+		respawn = [point.x, point.y]
+	}
+
+
+	//Game config
+	function setup() {
+		createCanvas($(document).width(), $(document).height());
+		world.gravity.y = 0;
+
+		zoom = maps["Fase" + level]["zoom"]
+		tamanhoParede = maps["Fase" + level]["tamanhoParede"]
+
+		//Player
+		player = new Group();
+		player.w = 15;
+		player.h = 15;
+		player.bounciness = 0
+		player.collider = "d"
+		player.friction = 0
+		player.rotationLock = true
+		player.stroke = "black"
+		player.color = "#00a335"
+		player.pixelPerfect = true
+
+		//Walls
+		fakewalls = new Group();
+		fakewalls.w = 10;
+		fakewalls.h = 10;
+		fakewalls.color = "rgba(110, 110, 110, 1)"
+		fakewalls.stroke = "rgba(110, 110, 110, 1)"
+		fakewalls.collider = 's';
+
+		walls = new Group();
+		walls.w = 10;
+		walls.h = 10;
+		walls.color = "rgba(90, 90, 90, 1)"
+		walls.bounciness = 0
+		walls.collider = 's';
+		walls.stroke = "rgba(90, 90, 90, 1)"
+
+		//Enemies
+		enemies = new Group()
+		enemies.color = "red";
+		enemies.stroke = "black"
+		enemies.w = 15;
+		enemies.h = 15;
+		enemies.bounciness = 1
+		enemies.friction = 0
+		enemies.rotationLock = true
+		enemies.collider = "d"
+
+		verticalEnemy = new enemies.Group()
+		
+		horizontalEnemy = new enemies.Group()
+
+		diagonalEnemy = new enemies.Group()
+
+		//Special
+		portal = new Group();
+		portal.collider = 'static';
+		portal.radius = 15
+
+		checkpoint = new Group();
+		checkpoint.w = 90;
+		checkpoint.h = 90;
+		checkpoint.color = "rgba(0,127,255, 0.5)"
+		checkpoint.bounciness = 0
+		checkpoint.collider = 'none';
+		checkpoint.stroke = "rgba(0,127,255, 0.5)"
+		
+		//Tiles
+		player.tile = "P";
+		walls.tile = "=";
+		fakewalls.tile = "§";
+		checkpoint.tile = "C";
+		portal.tile = "*";
+		verticalEnemy.tile = "|";
+		horizontalEnemy.tile = "-";
+		diagonalEnemy.tile = "/";		
+	}
+
+	function draw() {
+		clear()
+		if (status == "Game"){
+			if (running == false){
+				zoom = maps["Fase" + level]["zoom"]
+				runningMap = new Tiles(
+					maps["Fase" + level]["tiles"],
+					0,
+					0,
+					10,
+					10
+				)
+				respawn = [player[0].x, player[0].y]
+				for (let i in maps["Fase" + level]["inimigosV"]){
+					verticalEnemy[i].velocity.y = maps["Fase" + level]["inimigosV"][i];
+				}
+				for (let i in maps["Fase" + level]["inimigosH"]){
+					horizontalEnemy[i].velocity.x = maps["Fase" + level]["inimigosH"][i];
+				}
+				for (let i in maps["Fase" + level]["inimigosD"]){
+					diagonalEnemy[i].velocity.y = maps["Fase" + level]["inimigosD"][i];
+					diagonalEnemy[i].velocity.x = maps["Fase" + level]["inimigosD"][i];
+				}
+				running = true
+			}
+			player[0].rotateTo(0, 100)
+			camera.zoom = zoom;
+			camera.x = player[0].x;
+			camera.y = player[0].y;
+
+			enemies.overlapping(enemies)
+			
+
+			//Player colissions
+			player.overlaps(checkpoint, check)
+
+			player.overlaps(fakewalls, fade)
+
+			if (player.overlaps(enemies)){
+				player.x = respawn[0]
+				player.y = respawn[1]
+			}
+
+			if (player.colliding(portal)){
+				level += 1
+				runningMap.remove()
+				zoom = maps["Fase" + level]["zoom"]
+				runningMap = new Tiles(
+					maps["Fase" + level]["tiles"],
+					0,
+					0,
+					10,
+					10
+				)
+				respawn = [player[0].x, player[0].y]
+				for (let i in maps["Fase" + level]["inimigosV"]){
+					verticalEnemy[i].velocity.y = maps["Fase" + level]["inimigosV"][i];
+				}
+				for (let i in maps["Fase" + level]["inimigosH"]){
+					horizontalEnemy[i].velocity.x = maps["Fase" + level]["inimigosH"][i];
+				}
+				for (let i in maps["Fase" + level]["inimigosD"]){
+					diagonalEnemy[i].velocity.y = maps["Fase" + level]["inimigosD"][i];
+					diagonalEnemy[i].velocity.x = maps["Fase" + level]["inimigosD"][i];
+				}
+				player.x = respawn[0]
+				player.y = respawn[1]
+			}
+
+			let x = 0;
+			let y = 0;
+			if (kb.pressing('a') || kb.pressing('left')){
+				x -= velocidadeJogador;
+			}
+			if (kb.pressing('d') || kb.pressing('right')){
+				x += velocidadeJogador;
+			}
+			if (kb.pressing('w') || kb.pressing('up')){
+				y -= velocidadeJogador;
+			}
+			if (kb.pressing('s') || kb.pressing('down')){
+				y += velocidadeJogador;
+			}
+			if (kb.pressing('shift')){
+				y = y*1.5
+				x = x*1.5
+			}
+
+			player.velocity.y = y
+			player.velocity.x = x
+		} else if (status == "Editor"){
+			let a = 1
+		}  
+		else if (status == "Menu"){
+			let a = 1
+		}  
+		
+	}
+
+</script>
+</html>
