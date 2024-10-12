@@ -1,0 +1,96 @@
+[gd_scene load_steps=10 format=3 uid="uid://cv5xf82vfhnj8"]
+
+[ext_resource type="Texture2D" uid="uid://b3qx2lcwcnjmr" path="res://images/buttons/singleplayer.png" id="1_8s4c5"]
+[ext_resource type="Texture2D" uid="uid://c5mrmeji3q54f" path="res://images/buttons/multiplayer.png" id="2_qfppw"]
+
+[sub_resource type="GDScript" id="GDScript_k8xsn"]
+resource_name = "button1"
+script/source = "extends Area2D
+
+var Level1 = load(\"res://scenes/levels/level1.tscn\")
+
+func _on_area_entered(area: Area2D) -> void:
+	self.get_node(\"singleplayer\").play(\"hover\")
+	get_tree().get_root().get_node(\"sceneManager\").change_scene(\"res://scenes/levels/level1.tscn\")
+"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jysll"]
+atlas = ExtResource("1_8s4c5")
+region = Rect2(0, 0, 150, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u4a5c"]
+atlas = ExtResource("1_8s4c5")
+region = Rect2(150, 0, 150, 150)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_aeh14"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jysll")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u4a5c")
+}],
+"loop": true,
+"name": &"hover",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sj3v6"]
+atlas = ExtResource("2_qfppw")
+region = Rect2(0, 0, 150, 150)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dan8n"]
+atlas = ExtResource("2_qfppw")
+region = Rect2(150, 0, 150, 150)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kadv1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sj3v6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dan8n")
+}],
+"loop": true,
+"name": &"hover",
+"speed": 5.0
+}]
+
+[node name="Menu" type="Node2D"]
+
+[node name="singleplayer" type="Area2D" parent="." groups=["button1"]]
+script = SubResource("GDScript_k8xsn")
+
+[node name="singleplayer" type="AnimatedSprite2D" parent="singleplayer"]
+position = Vector2(90, 150)
+sprite_frames = SubResource("SpriteFrames_aeh14")
+autoplay = "default"
+
+[node name="collision" type="CollisionPolygon2D" parent="singleplayer"]
+visible = false
+polygon = PackedVector2Array(56, 148, 56, 130, 122, 130, 122, 148)
+
+[node name="multiplayer" type="Area2D" parent="." groups=["button1"]]
+
+[node name="multiplayer" type="AnimatedSprite2D" parent="multiplayer"]
+position = Vector2(270, 150)
+sprite_frames = SubResource("SpriteFrames_kadv1")
+autoplay = "default"
+
+[node name="collision" type="CollisionPolygon2D" parent="multiplayer"]
+visible = false
+polygon = PackedVector2Array(233, 147, 233, 129, 299, 129, 299, 147)
+
+[connection signal="area_entered" from="singleplayer" to="singleplayer" method="_on_area_entered"]

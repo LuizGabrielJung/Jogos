@@ -1,0 +1,97 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvvkwm3lbkqav"]
+
+[ext_resource type="PackedScene" uid="uid://bdggu4xg3a2o8" path="res://scenes/enemies/fleet1/fighter.tscn" id="1_m3t2l"]
+[ext_resource type="PackedScene" uid="uid://dq45d00pllmji" path="res://scenes/enemies/fleet1/scout.tscn" id="2_sx86i"]
+
+[sub_resource type="GDScript" id="GDScript_6lskk"]
+resource_name = "level1"
+script/source = "extends Node2D
+
+var Movements = load(\"res://scripts/movements.gd\")
+var movements = Movements.new()
+var nextRound = 0
+var round = []
+var createRound
+
+
+func _ready() -> void:
+	call_deferred(\"next_round\")
+
+func _process(delta: float) -> void:
+	for item in round.size():
+		if str(round[item]) == \"<Freed Object>\":
+			round.pop_at(item)
+			break
+	if round.size() == 0 and createRound:
+		call_deferred(\"next_round\")
+		
+func next_round():
+	createRound = false
+	if nextRound == 0:
+		for i in range(5):
+			var scout = $scout.duplicate()
+			round += [scout]
+			scout.set_parent(false)
+			scout.visible = true
+			scout.monitoring = true
+			scout.monitorable = true
+			scout.position = Vector2(-40 * i, -40 * i)
+			scout.set_movement(movements.senoid1 + [[Vector2(0, 0), \"instant\"]])
+			scout.set_fireRate(1)
+			add_child(scout)
+			
+	if nextRound == 1:
+		for i in range(5):
+			var scout = $scout.duplicate()
+			round += [scout]
+			scout.set_parent(false)
+			scout.visible = true
+			scout.monitoring = true
+			scout.monitorable = true
+			scout.position = Vector2(-40 * i, -40 * i)
+			scout.set_movement(movements.senoid1 + [[Vector2(0, 0), \"instant\"]])
+			scout.set_fireRate(1)
+			scout.set_shield()
+			add_child(scout)
+			
+	if nextRound == 2:
+		for i in range(1, 6):
+			var scout = $scout.duplicate()
+			round += [scout]
+			scout.set_parent(false)
+			scout.visible = true
+			scout.monitoring = true
+			scout.monitorable = true
+			scout.position = Vector2(-50 * i, -50)
+			scout.set_movement(movements.senoid1 + [[Vector2(-40, -40), \"instant\"]])
+			scout.set_fireRate(randf_range(1, 2))
+			add_child(scout)
+			var fighter = $fighter.duplicate()
+			fighter.position = Vector2(-50 * i, 50)
+			var senoid2 = []
+			for move in movements.senoid1.duplicate():
+				senoid2.push_back([move[0] + Vector2(0, 80)])
+			fighter.set_parent(false)
+			fighter.visible = true
+			fighter.monitoring = true
+			fighter.monitorable = true
+			fighter.set_movement(senoid2 + [[Vector2(-30, 80), \"instant\"]])
+			fighter.set_fireRate(randf_range(1, 2))
+			fighter.set_shield()
+			add_child(fighter)
+		
+	nextRound += 1
+	createRound = true
+"
+
+[node name="Node2D" type="Node2D"]
+script = SubResource("GDScript_6lskk")
+
+[node name="fighter" parent="." instance=ExtResource("1_m3t2l")]
+visible = false
+monitoring = false
+monitorable = false
+
+[node name="scout" parent="." instance=ExtResource("2_sx86i")]
+visible = false
+monitorable = false

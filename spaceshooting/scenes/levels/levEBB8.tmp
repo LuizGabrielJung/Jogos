@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3 uid="uid://dvvkwm3lbkqav"]
+
+[sub_resource type="GDScript" id="GDScript_6lskk"]
+resource_name = "level1"
+script/source = "extends Node2D
+
+var Scout1 = load(\"res://scenes/enemies/fleet1/scout.tscn\")
+var Movements = load(\"res://scenes/movements.gd\")
+var movements = Movements.new()
+var nextRound = 0
+var round = []
+
+func _ready() -> void:
+	next_round()
+	
+	
+
+func _process(delta: float) -> void:
+	if round == []:
+		next_round()
+		
+func next_round():
+	if nextRound == 0:
+		for i in range(5):
+			var scout = Scout1.instantiate()
+			round + [scout]
+			scout.set_parentScene(self)
+			scout.position = Vector2(-40 * i, -40 * i)
+			scout.set_movement(movements.senoid1 + [[Vector2(0, 0), \"instant\"]])
+			scout.set_fireRate(1)
+			add_child(scout)
+			
+	if nextRound == 1:
+		for i in range(5):
+			var scout = Scout1.instantiate()
+			round + [scout]
+			scout.set_parentScene(self)
+			scout.position = Vector2(-40 * i, -40 * i)
+			scout.set_movement(movements.senoid1 + [[Vector2(0, 0), \"instant\"]])
+			scout.set_fireRate(1)
+			scout.set_shield()
+			add_child(scout)
+			
+	if nextRound == 2:
+		for i in range(5):
+			var scout = Scout1.instantiate()
+			round + [scout]
+			scout.set_parentScene(self)
+			scout.position = Vector2(-40 * i, -40 * i)
+			scout.set_movement(movements.senoid1 + [[Vector2(0, 0), \"instant\"]])
+			scout.set_fireRate(1)
+			add_child(scout)
+			scout.set_parentScene(self)
+			scout.position = Vector2(-40 * i, -40 * i)
+			scout.set_movement(movements.senoid1 + [[Vector2(0, 0), \"instant\"]])
+			scout.set_fireRate(1)
+			scout.set_shield()
+			add_child(scout)
+"
+
+[node name="Node2D" type="Node2D"]
+script = SubResource("GDScript_6lskk")

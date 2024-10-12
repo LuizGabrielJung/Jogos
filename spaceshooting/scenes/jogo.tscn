@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://banehx75xwdw3"]
+
+[ext_resource type="PackedScene" uid="uid://tryv2iv0nt5j" path="res://scenes/background/background.tscn" id="1_l1o0p"]
+[ext_resource type="PackedScene" uid="uid://dorvdjmxdxibq" path="res://scenes/player/player.tscn" id="2_soiys"]
+
+[sub_resource type="GDScript" id="GDScript_0wgxm"]
+resource_name = "jogo"
+script/source = "extends Node2D
+
+func _ready() -> void:
+	change_scene(\"res://scenes/levels/menu.tscn\")
+
+func _process(delta: float) -> void:
+	pass
+	
+func change_scene(value: String) -> void:
+	for child in $scene.get_children():
+		child.queue_free()
+	var scene = load(value)
+	$scene.add_child(scene.instantiate())
+"
+
+[node name="sceneManager" type="Node2D"]
+script = SubResource("GDScript_0wgxm")
+
+[node name="scene" type="Node2D" parent="."]
+
+[node name="ParallaxBackground" parent="." instance=ExtResource("1_l1o0p")]
+
+[node name="player" parent="." instance=ExtResource("2_soiys")]

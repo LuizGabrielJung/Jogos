@@ -1,0 +1,302 @@
+[gd_scene load_steps=35 format=3 uid="uid://tryv2iv0nt5j"]
+
+[ext_resource type="Texture2D" uid="uid://cb0rlrgo476km" path="res://images/background/waves.png" id="1_8mojh"]
+[ext_resource type="Texture2D" uid="uid://cy3ipjys2ywo" path="res://images/background/bigstars.png" id="2_pdi1c"]
+[ext_resource type="Texture2D" uid="uid://cvieejlb8dt6t" path="res://images/background/stars.png" id="3_pnfkq"]
+
+[sub_resource type="GDScript" id="GDScript_mbhov"]
+resource_name = "background"
+script/source = "extends Node2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	$waves/waves.play('default')
+	$waves/waves2.play('default')
+	$stars/stars.play('default')
+	$stars/stars2.play('default')
+	$bigstars/bigstars.play('default')
+	$bigstars/bigstars2.play('default')
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	$waves.position.y += 0.2
+	$stars.position.y += 0.4
+	$bigstars.position.y += 0.6
+	
+	if $waves.position.y >= 640:
+		$waves.position.y = 0
+	
+	if $stars.position.y >= 640:
+		$stars.position.y = 0
+		$stars/stars.flip_v = !$stars/stars.flip_v
+		$stars/stars2.flip_v = !$stars/stars2.flip_v
+		
+	if $bigstars.position.y >= 640:
+		$bigstars.position.y = 0
+		$bigstars/bigstars.flip_v = !$bigstars/bigstars.flip_v
+		$bigstars/bigstars2.flip_v = !$bigstars/bigstars2.flip_v
+"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sk2vo"]
+atlas = ExtResource("1_8mojh")
+region = Rect2(0, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f61xu"]
+atlas = ExtResource("1_8mojh")
+region = Rect2(640, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7ytcr"]
+atlas = ExtResource("1_8mojh")
+region = Rect2(1280, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1g31r"]
+atlas = ExtResource("1_8mojh")
+region = Rect2(1920, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h1q40"]
+atlas = ExtResource("1_8mojh")
+region = Rect2(2560, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dbs1n"]
+atlas = ExtResource("1_8mojh")
+region = Rect2(3200, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wfbuc"]
+atlas = ExtResource("1_8mojh")
+region = Rect2(3840, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ghs31"]
+atlas = ExtResource("1_8mojh")
+region = Rect2(4480, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5u15d"]
+atlas = ExtResource("1_8mojh")
+region = Rect2(5120, 0, 640, 360)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vtvwh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sk2vo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f61xu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7ytcr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1g31r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h1q40")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dbs1n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wfbuc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ghs31")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5u15d")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pdsqs"]
+atlas = ExtResource("2_pdi1c")
+region = Rect2(0, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_awcyv"]
+atlas = ExtResource("2_pdi1c")
+region = Rect2(640, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dwj7b"]
+atlas = ExtResource("2_pdi1c")
+region = Rect2(1280, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hepwq"]
+atlas = ExtResource("2_pdi1c")
+region = Rect2(1920, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uah8u"]
+atlas = ExtResource("2_pdi1c")
+region = Rect2(2560, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sphlb"]
+atlas = ExtResource("2_pdi1c")
+region = Rect2(3200, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7xb21"]
+atlas = ExtResource("2_pdi1c")
+region = Rect2(3840, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_awlpy"]
+atlas = ExtResource("2_pdi1c")
+region = Rect2(4480, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jbwhj"]
+atlas = ExtResource("2_pdi1c")
+region = Rect2(5120, 0, 640, 360)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_we16q"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pdsqs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_awcyv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dwj7b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hepwq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uah8u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sphlb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7xb21")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_awlpy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jbwhj")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ipoho"]
+atlas = ExtResource("3_pnfkq")
+region = Rect2(0, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2hyd4"]
+atlas = ExtResource("3_pnfkq")
+region = Rect2(640, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kbovq"]
+atlas = ExtResource("3_pnfkq")
+region = Rect2(1280, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jlmhl"]
+atlas = ExtResource("3_pnfkq")
+region = Rect2(1920, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_othav"]
+atlas = ExtResource("3_pnfkq")
+region = Rect2(2560, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c2bru"]
+atlas = ExtResource("3_pnfkq")
+region = Rect2(3200, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2ga16"]
+atlas = ExtResource("3_pnfkq")
+region = Rect2(3840, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x885k"]
+atlas = ExtResource("3_pnfkq")
+region = Rect2(4480, 0, 640, 360)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_56adq"]
+atlas = ExtResource("3_pnfkq")
+region = Rect2(5120, 0, 640, 360)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jdm6p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ipoho")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2hyd4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kbovq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jlmhl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_othav")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c2bru")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2ga16")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x885k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_56adq")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="ParallaxBackground" type="Node2D"]
+texture_filter = 1
+position = Vector2(180, 320)
+script = SubResource("GDScript_mbhov")
+
+[node name="waves" type="Node2D" parent="."]
+rotation = 1.5708
+
+[node name="waves" type="AnimatedSprite2D" parent="waves"]
+z_index = -3
+sprite_frames = SubResource("SpriteFrames_vtvwh")
+frame_progress = 0.736444
+
+[node name="waves2" type="AnimatedSprite2D" parent="waves"]
+z_index = -3
+position = Vector2(-640, 0)
+sprite_frames = SubResource("SpriteFrames_vtvwh")
+frame_progress = 0.873287
+
+[node name="bigstars" type="Node2D" parent="."]
+rotation = 1.5708
+
+[node name="bigstars" type="AnimatedSprite2D" parent="bigstars"]
+z_index = -2
+sprite_frames = SubResource("SpriteFrames_we16q")
+frame_progress = 0.718314
+
+[node name="bigstars2" type="AnimatedSprite2D" parent="bigstars"]
+z_index = -2
+position = Vector2(-640, 0)
+sprite_frames = SubResource("SpriteFrames_we16q")
+frame_progress = 0.509001
+flip_v = true
+
+[node name="stars" type="Node2D" parent="."]
+rotation = 1.5708
+
+[node name="stars" type="AnimatedSprite2D" parent="stars"]
+z_index = -1
+sprite_frames = SubResource("SpriteFrames_jdm6p")
+frame_progress = 0.193201
+
+[node name="stars2" type="AnimatedSprite2D" parent="stars"]
+z_index = -1
+position = Vector2(-640, 0)
+sprite_frames = SubResource("SpriteFrames_jdm6p")
+frame_progress = 0.228208
+flip_v = true
